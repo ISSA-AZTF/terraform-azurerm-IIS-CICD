@@ -87,6 +87,17 @@ module "Win_VM" {
 | `IIS_publisher`        | string   | Publisher de l’extension d’installation IIS (ex : Microsoft.Compute) |
 | `type`                 | string   | Type de l’extension (ex : CustomScriptExtension)                     |
 
+## Authentification Azure (Service Principal)
+> Terraform s'authentifie à Azure via un Service Principal, configuré dans les variables d’environnement GitLab CI.
+> Le Service Principal a été généré manuellement Azure CLI avec les droits suffisants sur le Resource Group cible.
+   
+    az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/xxxx/resourceGroups/rg"
+
+Ces variables sont définies dans Settings > CI/CD > Variables du projet GitLab.
+Voici une capture d'écran montrant la configuration :
+
+![ARM_secrets](Pictures/tf_azure_authentication.png)
+
 
 ## CI/CD - GitLab (.gitlab-ci.yml)
 ```yaml
