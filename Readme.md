@@ -15,6 +15,8 @@
 
 ### Backend
 
+> Utilise un backend Azure pour stocker le fichier terraform.tfstate à distance.
+
 ```hcl
 terraform {
   backend "azurerm" {
@@ -25,6 +27,8 @@ terraform {
   }
 }
 ```
+
+
 
 ## Variables - Root module
 
