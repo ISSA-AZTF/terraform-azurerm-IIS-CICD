@@ -27,8 +27,43 @@ terraform {
   }
 }
 ```
+## Root Module
 
+```hcl
+# Resource group data source
+data "azurerm_resource_group" "rg" {
+name = "rg"
+}
 
+# Network Module
+module "Network" {
+  source              = "./modules/Network"
+  resource_group_name = data.azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.rg.location
+  prefix              = var.prefix
+  ip_allocation       = var.ip_allocation
+  sec_rules           = var.sec_rules
+}
+
+# Windows Virtual Machine Module
+module "Win_VM" {
+  source               = "./modules/Win_VM"
+  resource_group_name  = data.azurerm_resource_group.rg.name
+  location             = data.azurerm_resource_group.rg.location
+  admin_username       = var.admin_username
+  version              = var.version
+  publisher            = var.publisher
+  caching              = var.caching
+  IIS_publisher        = var.IIS_publisher
+  extension_prefix     = var.extension_prefix
+  vm_size              = var.vm_size
+  vm_prefix            = var.vm_prefix
+  storage_account_type = var.storage_account_type
+  offer                = var.offer
+  sku                  = var.sku
+  type                 = var.type
+}
+```
 
 ## Variables - Root module
 
@@ -51,35 +86,6 @@ terraform {
 | `version`              | string   | Version de l’image (ex : latest)                                     |
 | `IIS_publisher`        | string   | Publisher de l’extension d’installation IIS (ex : Microsoft.Compute) |
 | `type`                 | string   | Type de l’extension (ex : CustomScriptExtension)                     |
-
-
-## Variables - Module Network
-| **Variable**          | **Type** | **Description**                               |
-| --------------------- | -------- | --------------------------------------------- |
-| `location`            | string   | Région Azure                                  |
-| `resource_group_name` | string   | Groupe de ressources                          |
-| `prefix`              | string   | Préfixe commun aux ressources du réseau       |
-| `ip_allocation`       | string   | Allocation IP publique (Static / Dynamic)     |
-| `sec_rules`           | map      | Map des règles de sécurité à appliquer au NSG |
-
-
-## Variables - Module Win_VM
-| **Variable**           | **Type** | **Description**                                             |
-| ---------------------- | -------- | ----------------------------------------------------------- |
-| `admin_username`       | string   | Nom d’utilisateur admin                                     |
-| `location`             | string   | Région Azure                                                |
-| `resource_group_name`  | string   | Groupe de ressources                                        |
-| `extension_prefix`     | string   | Préfixe de l’extension IIS                                  |
-| `vm_prefix`            | string   | Préfixe utilisé pour nommer la VM                           |
-| `vm_size`              | string   | SKU de la VM                                                |
-| `caching`              | string   | Mode de caching pour le disque                              |
-| `storage_account_type` | string   | Type de stockage utilisé                                    |
-| `publisher`            | string   | Publisher de l’image VM                                     |
-| `offer`                | string   | Offre / famille d’OS                                        |
-| `sku`                  | string   | SKU de l’OS                                                 |
-| `version`              | string   | Version de l’image (souvent `latest`)                       |
-| `IIS_publisher`        | string   | Publisher de l’extension Custom Script pour IIS             |
-| `type`                 | string   | Type de l’extension déployée (ex : `CustomScriptExtension`) |
 
 
 ## CI/CD - GitLab (.gitlab-ci.yml)
@@ -144,4 +150,4 @@ Ce projet permet de déployer automatiquement une infrastructure Azure complète
 
 ## Auteur
 
-CHATTI ISSAM — [Linkedin]()|[Github](https://github.com/ISSA-AZTF)
+CHATTI ISSAM — [Linkedin](https://www.linkedin.com/in/issam-chatti-172838123) | [Github](https://github.com/ISSA-AZTF)
