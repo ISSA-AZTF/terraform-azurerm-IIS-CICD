@@ -141,3 +141,7 @@ terraform_apply:
 ## Conclusion
 
 Ce projet permet de déployer automatiquement une infrastructure Azure complète avec réseau sécurisé et VM Windows configurée avec IIS. Le pipeline GitLab CI/CD assure un déploiement fiable et structuré.
+
+## Auteur
+
+CHATTI ISSAM — [Linkedin]()|[Github](https://github.com/ISSA-AZTF)
