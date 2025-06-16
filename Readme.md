@@ -19,7 +19,7 @@
 terraform {
   backend "azurerm" {
     resource_group_name   = "rg"
-    storage_account_name  = "tfstatefile"
+    storage_account_name  = "sa_tfstatefile"
     container_name        = "mycontainer"
     key                   = "terraform.tfstate"
   }
@@ -28,52 +28,55 @@ terraform {
 
 ## Variables - Root module
 
-| Nom                    | Type   | Description                    |
-| ---------------------- | ------ | ------------------------------ |
-| `prefix`               | string | Préfixe des ressources         |
-| `ip_allocation`        | string | Méthode d'allocation IP        |
-| `sec_rules`            | map    | Règles dynamiques du NSG       |
-| `admin_username`       | string | Nom d'utilisateur admin VM     |
-| `location`             | string | Région Azure                   |
-| `resource_group_name`  | string | Groupe de ressources           |
-| `vm_prefix`            | string | Préfixe de la VM               |
-| `extension_prefix`     | string | Préfixe de l'extension         |
-| `vm_size`              | string | Taille de la VM                |
-| `caching`              | string | Mode de caching disque         |
-| `storage_account_type` | string | Type de compte de stockage     |
-| `publisher`            | string | Éditeur de l’image VM          |
-| `offer`                | string | Famille de l’OS                |
-| `sku`                  | string | SKU de l’OS                    |
-| `version`              | string | Version de l’OS                |
-| `IIS_publisher`        | string | Fournisseur pour extension IIS |
-| `type`                 | string | Type de ressource extension    |
+| **Variable**           | **Type** | **Description**                                                      |
+| ---------------------- | -------- | -------------------------------------------------------------------- |
+| `prefix`               | string   | Préfixe appliqué à toutes les ressources                             |
+| `ip_allocation`        | string   | Méthode d’allocation IP (Dynamic ou Static)                          |
+| `sec_rules`            | map      | Map de règles de sécurité pour le NSG                                |
+| `admin_username`       | string   | Nom d’utilisateur administrateur de la VM                            |
+| `location`             | string   | Région Azure dans laquelle déployer                                  |
+| `resource_group_name`  | string   | Nom du groupe de ressources Azure                                    |
+| `vm_prefix`            | string   | Préfixe de nom de la machine virtuelle                               |
+| `extension_prefix`     | string   | Préfixe pour l’extension d’installation d’IIS                        |
+| `vm_size`              | string   | Taille (SKU) de la VM                                                |
+| `caching`              | string   | Mode de caching pour le disque OS                                    |
+| `storage_account_type` | string   | Type de stockage (Standard\_LRS, Premium\_LRS, etc.)                 |
+| `publisher`            | string   | Publisher de l’image VM (ex : MicrosoftWindowsServer)                |
+| `offer`                | string   | Famille d’OS (ex : WindowsServer)                                    |
+| `sku`                  | string   | SKU spécifique (ex : 2019-Datacenter)                                |
+| `version`              | string   | Version de l’image (ex : latest)                                     |
+| `IIS_publisher`        | string   | Publisher de l’extension d’installation IIS (ex : Microsoft.Compute) |
+| `type`                 | string   | Type de l’extension (ex : CustomScriptExtension)                     |
+
 
 ## Variables - Module Network
-| Nom                   | Type   | Description               |
-| --------------------- | ------ | ------------------------- |
-| `location`            | string | Région Azure              |
-| `resource_group_name` | string | Groupe de ressources      |
-| `prefix`              | string | Préfixe des ressources    |
-| `ip_allocation`       | string | Méthode d'allocation IP   |
-| `sec_rules`           | map    | Règles de sécurité du NSG |
+| **Variable**          | **Type** | **Description**                               |
+| --------------------- | -------- | --------------------------------------------- |
+| `location`            | string   | Région Azure                                  |
+| `resource_group_name` | string   | Groupe de ressources                          |
+| `prefix`              | string   | Préfixe commun aux ressources du réseau       |
+| `ip_allocation`       | string   | Allocation IP publique (Static / Dynamic)     |
+| `sec_rules`           | map      | Map des règles de sécurité à appliquer au NSG |
+
 
 ## Variables - Module Win_VM
-| Nom                    | Type   | Description                |
-| ---------------------- | ------ | -------------------------- |
-| `admin_username`       | string | Nom d'utilisateur admin    |
-| `location`             | string | Région Azure               |
-| `resource_group_name`  | string | Groupe de ressources       |
-| `extension_prefix`     | string | Préfixe extension IIS      |
-| `vm_prefix`            | string | Préfixe VM                 |
-| `vm_size`              | string | Taille VM                  |
-| `caching`              | string | Caching disque             |
-| `storage_account_type` | string | Type de compte de stockage |
-| `publisher`            | string | Publisher image            |
-| `offer`                | string | OS family                  |
-| `sku`                  | string | SKU                        |
-| `version`              | string | Version OS                 |
-| `IIS_publisher`        | string | Publisher extension IIS    |
-| `type`                 | string | Type extension             |
+| **Variable**           | **Type** | **Description**                                             |
+| ---------------------- | -------- | ----------------------------------------------------------- |
+| `admin_username`       | string   | Nom d’utilisateur admin                                     |
+| `location`             | string   | Région Azure                                                |
+| `resource_group_name`  | string   | Groupe de ressources                                        |
+| `extension_prefix`     | string   | Préfixe de l’extension IIS                                  |
+| `vm_prefix`            | string   | Préfixe utilisé pour nommer la VM                           |
+| `vm_size`              | string   | SKU de la VM                                                |
+| `caching`              | string   | Mode de caching pour le disque                              |
+| `storage_account_type` | string   | Type de stockage utilisé                                    |
+| `publisher`            | string   | Publisher de l’image VM                                     |
+| `offer`                | string   | Offre / famille d’OS                                        |
+| `sku`                  | string   | SKU de l’OS                                                 |
+| `version`              | string   | Version de l’image (souvent `latest`)                       |
+| `IIS_publisher`        | string   | Publisher de l’extension Custom Script pour IIS             |
+| `type`                 | string   | Type de l’extension déployée (ex : `CustomScriptExtension`) |
+
 
 ## CI/CD - GitLab (.gitlab-ci.yml)
 ```yaml
