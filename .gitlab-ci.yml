@@ -1,0 +1,55 @@
+workflow:
+    rules:
+      -  if: $CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TITLE =~ /gitlab$/
+         when: always
+      -  if: $CI_PIPELINE_SOURCE != "push" &&  $CI_PROJECT_VISIBILITY != "public"  
+         when: never  
+
+stages:
+       - Validation
+       - Previsualization
+       - Application
+       
+default:
+    image: 
+        name: hashicorp/terraform:latest
+        entrypoint:
+           - /usr/bin/env
+           - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    
+    before_script:
+        - cd terraform_azure
+        - terraform init 
+    cache:
+       key: terraform-cache
+       paths:
+       - terraform_azure/.terraform/
+
+terraform_validate:
+    stage: Validation
+    script:
+        - terraform validate    
+
+terraform_plan:
+    stage: Previsualization
+    environment: 
+        name: "Production"
+    script:
+        - terraform plan -out=myplan
+        - pwd
+        - ls -la 
+    artifacts:
+        name: "$CI_ENVIRONMENT_NAME-plan"
+        paths: 
+        - terraform_azure/myplan    
+
+terraform_apply:
+    stage: Application
+    script:
+        - terraform apply --auto-approve myplan
+    rules:
+      - if : $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+        when: manual  
+    
+
+        
