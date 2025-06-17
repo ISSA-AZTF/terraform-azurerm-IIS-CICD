@@ -88,7 +88,7 @@ module "Win_VM" {
 | `type`                 | string   | Type de l’extension (ex : CustomScriptExtension)                     |
 
 ## Authentification Azure (Service Principal)
-> Terraform s'authentifie à Azure via un Service Principal, configuré dans les variables d’environnement GitLab CI.
+> Terraform utilise un Service Principal défini dans les variables GitLab CI pour s’authentifier à Azure.
 
 > Le Service Principal a été généré manuellement Azure CLI avec les droits suffisants sur le Resource Group cible.
    
